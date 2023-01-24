@@ -18,4 +18,5 @@ public interface EmployeeService {
     List<EmployeeDetailsDTO> getEmployeeByCompanyId(long companyId);
 
     void deleteEmployee(long id);
+
 }

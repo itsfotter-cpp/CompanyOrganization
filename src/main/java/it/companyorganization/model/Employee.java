@@ -36,7 +36,6 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<RoleEntity> roles = new ArrayList<>();
 
