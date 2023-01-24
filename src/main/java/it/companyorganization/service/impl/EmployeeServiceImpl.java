@@ -3,6 +3,7 @@ package it.companyorganization.service.impl;
 import it.companyorganization.dto.EmployeeDetailsDTO;
 import it.companyorganization.exception.ResourceConflictException;
 import it.companyorganization.exception.ResourceNotFoundException;
+import it.companyorganization.mappers.EmployeeMapper;
 import it.companyorganization.model.Company;
 import it.companyorganization.model.Employee;
 import it.companyorganization.model.RoleEntity;
@@ -40,6 +41,9 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
     /*
     public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -48,6 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
     private final PasswordEncoder passwordEncoder;
 
+    /*
     private EmployeeDetailsDTO convertEntityToDTO(Employee employee) {
 
         EmployeeDetailsDTO employeeDetailsDTO = new EmployeeDetailsDTO();
@@ -74,6 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
         return edtoList;
     }
+    */
 
     @Override
     public Employee saveEmployee(Employee employee) {
@@ -136,7 +142,7 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
     @Override
     public List<EmployeeDetailsDTO> getEmployeeByCompanyId(long companyId) {
-        return convertListOfEntityToDTO(employeeRepository.findByCompanyId(companyId));
+        return employeeMapper.toEmployeeDetailsDTOs(employeeRepository.findByCompanyId(companyId));
     }
 
     @Override
@@ -183,7 +189,7 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
                 () -> new ResourceNotFoundException("Employee", "ID", id)
         );
 
-        return convertEntityToDTO(existingEmployee);
+        return employeeMapper.toEmployeeDetailsDTO(existingEmployee);
     }
 
     @Override
