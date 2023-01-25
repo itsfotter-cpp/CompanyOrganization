@@ -11,6 +11,7 @@ import it.companyorganization.repository.CompanyRepository;
 import it.companyorganization.repository.EmployeeRepository;
 import it.companyorganization.repository.RoleRepository;
 import it.companyorganization.service.EmployeeService;
+import it.companyorganization.util.ImageUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -146,7 +151,7 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     }
 
     @Override
-    public Employee updateEmployee(Employee employee, long id) {
+    public Employee updateEmployee(Employee employee, long id) throws IOException {
 
         //Check if the employee with ID 'id' exist in the db or not.
         Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
