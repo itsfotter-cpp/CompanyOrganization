@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests((authz) -> authz
-                        .antMatchers(HttpMethod.POST, "**/login/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/login").permitAll()
                         .antMatchers(HttpMethod.POST, "**/employee/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )

@@ -36,6 +36,9 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+    @Lob
+    @Column(name = "photo")
+    private byte[] photo;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<RoleEntity> roles = new ArrayList<>();
 
