@@ -33,11 +33,6 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "**/employee/**").hasAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                //.loginPage("/login.html")
-                .loginProcessingUrl("/sign")
-                //.defaultSuccessUrl("/homepage.html", true)
-                .and()
                 .addFilter(new CustomAuthenticationFilter(authenticationManager))
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
