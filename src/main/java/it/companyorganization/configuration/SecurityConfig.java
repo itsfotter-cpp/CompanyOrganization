@@ -28,11 +28,11 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeHttpRequests((authz) -> authz
-                        .antMatchers(HttpMethod.POST, "/login").permitAll()
-                        .antMatchers(HttpMethod.POST, "**/employee/**").hasAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated()
-                )
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers(HttpMethod.POST, "**/employee/**").hasAuthority("ROLE_ADMIN")
+                .anyRequest().authenticated()
+                .and()
                 .addFilter(new CustomAuthenticationFilter(authenticationManager))
                 .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
