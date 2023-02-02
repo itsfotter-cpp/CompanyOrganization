@@ -1,5 +1,6 @@
 package it.companyorganization.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import it.companyorganization.model.Company;
 import it.companyorganization.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ public class CompanyController {
     @PutMapping("/company/{id}")
     public ResponseEntity<Company> updateCompany(@RequestBody Company company, @PathVariable("id") long id) {
         return new ResponseEntity<Company>(companyService.updateCompany(company, id), HttpStatus.OK);
+    }
+
+    @GetMapping("/company/{id}/address")
+    public ResponseEntity<Object> getCompanyAddress(@PathVariable("id") long id) {
+        return new ResponseEntity<Object>(companyService.getCompanyAddress(id), HttpStatus.OK);
     }
 
 }
