@@ -1,6 +1,6 @@
 package it.companyorganization.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import it.companyorganization.model.Address;
 import it.companyorganization.model.Company;
 
 import java.util.List;
@@ -11,6 +11,6 @@ public interface CompanyService {
     List<Company> getAllCompanies();
     Company updateCompany(Company company, long id);
 
-    Object getCompanyAddress(long id);
+    Address[] getCompanyAddress(long id);
 
 }

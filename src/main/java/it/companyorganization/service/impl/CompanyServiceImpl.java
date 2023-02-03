@@ -1,13 +1,13 @@
 package it.companyorganization.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.companyorganization.exception.ResourceNotFoundException;
+import it.companyorganization.model.Address;
 import it.companyorganization.model.Company;
 import it.companyorganization.repository.CompanyRepository;
 import it.companyorganization.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -50,21 +50,31 @@ public class CompanyServiceImpl implements CompanyService {
 
     }
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Override
-    public Object getCompanyAddress(long id) {
+    public Address[] getCompanyAddress(long id) {
 
         Company company = companyRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Company", "id", id)
         );
 
-        String url = "https://nominatim.openstreetmap.org/search?q=" + company.getAddress() + "&format=json";
         RestTemplate restTemplate = new RestTemplate();
-        Object address = restTemplate.getForObject(url, Object.class);
 
-        return address;
+        String url = "https://nominatim.openstreetmap.org/search?q=" + company.getAddress() + "&format=json";
+
+        ResponseEntity<Address[]> addressResponseEntity = restTemplate.getForEntity(url, Address[].class);
+
+        //System.out.println("Response status code is: " + addressResponseEntity.getStatusCodeValue());
+
+        Address[] addresses = addressResponseEntity.getBody();
+
+        /*
+         * Potrebbero esserci più indirizzi, in questo modo stampo il placeId di ognuno
+         */
+        for(Address address: addresses) {
+            System.out.println(address.getPlaceId());
+        }
+
+        return addresses;
     }
 
 }
