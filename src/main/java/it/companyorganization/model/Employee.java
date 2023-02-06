@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -32,6 +34,8 @@ public class Employee {
     @Column(nullable = false)
     private String password;
     private String cf;
+    @NotBlank
+    @Email(message = "Inserire un pattern email valido!")
     private String email;
     @ManyToOne
     @JoinColumn(name = "company_id")
@@ -39,6 +43,7 @@ public class Employee {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "photo", referencedColumnName = "id")
+    @JsonIgnore
     @Lob
     private Image photo;
     @ManyToMany(fetch = FetchType.EAGER)

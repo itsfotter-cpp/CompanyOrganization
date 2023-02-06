@@ -25,8 +25,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -86,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     */
 
     @Override
-    public Employee saveEmployee(Employee employee) {
+    public Employee saveEmployee(@Valid Employee employee) {
 
         log.info("Saving employee {} to the database", employee.getUsername());
 
@@ -164,6 +166,24 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
         employeeRepository.save(existingEmployee);
 
         return existingEmployee;
+    }
+
+    @Override
+    public Optional<Image> getPhotoFromEmployee(long id) {
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee", "ID", id)
+        );
+
+        Optional<Image> image = null;
+
+        if(existingEmployee.getPhoto() != null) {
+            image = imageRepository.findById(existingEmployee.getPhoto().getId());
+        }
+        else {
+            throw new ResourceNotFoundException("Image", "Employee ID", id);
+        }
+
+        return image;
     }
 
     @Override

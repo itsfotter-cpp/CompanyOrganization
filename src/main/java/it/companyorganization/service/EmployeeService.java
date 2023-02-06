@@ -5,9 +5,11 @@ import it.companyorganization.model.Employee;
 import it.companyorganization.model.Image;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.Errors;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface EmployeeService {
     Employee saveEmployee(Employee employee);
@@ -18,6 +20,7 @@ public interface EmployeeService {
     EmployeeDetailsDTO getDetailedEmployee(long id);
     List<EmployeeDetailsDTO> getEmployeeByCompanyId(long companyId);
     Employee addPhotoToEmployee(Image image, long id);
+    Optional<Image> getPhotoFromEmployee(long id);
     void deleteEmployee(long id);
 
 }
