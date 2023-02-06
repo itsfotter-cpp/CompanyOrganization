@@ -30,4 +30,7 @@ public class Image {
 
 	@Column(name = "image", unique = false, nullable = false, length = 100000)
 	private byte[] image;
+
+	@OneToOne(mappedBy = "photo")
+	private Employee employee;
 }

@@ -6,9 +6,11 @@ import it.companyorganization.exception.ResourceNotFoundException;
 import it.companyorganization.mappers.EmployeeMapper;
 import it.companyorganization.model.Company;
 import it.companyorganization.model.Employee;
+import it.companyorganization.model.Image;
 import it.companyorganization.model.RoleEntity;
 import it.companyorganization.repository.CompanyRepository;
 import it.companyorganization.repository.EmployeeRepository;
+import it.companyorganization.repository.ImageRepository;
 import it.companyorganization.repository.RoleRepository;
 import it.companyorganization.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +42,8 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     private EmployeeRepository employeeRepository;
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
     private EmployeeMapper employeeMapper;
@@ -144,6 +147,23 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     @Override
     public List<EmployeeDetailsDTO> getEmployeeByCompanyId(long companyId) {
         return employeeMapper.toEmployeeDetailsDTOs(employeeRepository.findByCompanyId(companyId));
+    }
+
+    @Override
+    public Employee addPhotoToEmployee(Image image, long id) {
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee", "ID", id)
+        );
+
+        Image existingImage = imageRepository.findById(image.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Image", "ID", image.getId())
+        );
+
+        existingEmployee.setPhoto(existingImage);
+
+        employeeRepository.save(existingEmployee);
+
+        return existingEmployee;
     }
 
     @Override

@@ -36,9 +36,11 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "photo", referencedColumnName = "id")
     @Lob
-    @Column(name = "photo")
-    private byte[] photo;
+    private Image photo;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<RoleEntity> roles = new ArrayList<>();
 

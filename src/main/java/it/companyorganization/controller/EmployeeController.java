@@ -2,6 +2,7 @@ package it.companyorganization.controller;
 
 import it.companyorganization.dto.EmployeeDetailsDTO;
 import it.companyorganization.model.Employee;
+import it.companyorganization.model.Image;
 import it.companyorganization.model.RoleEntity;
 import it.companyorganization.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,12 @@ public class EmployeeController {
     public ResponseEntity<Employee> addRoleToUser(@PathVariable String username, @RequestBody RoleEntity roleEntity) {
         Employee employee = employeeService.addRoleToEmployee(username, roleEntity.getName());
         return new ResponseEntity<Employee>(employee, HttpStatus.CREATED);
+    }
+
+    @PostMapping("employee-image/{id}")
+    public ResponseEntity<Employee> addPhotoToEmployee(@RequestBody Image image, @PathVariable("id") long id) {
+        Employee employee = employeeService.addPhotoToEmployee(image, id);
+        return new ResponseEntity<Employee>(employee, HttpStatus.OK);
     }
 
 }
