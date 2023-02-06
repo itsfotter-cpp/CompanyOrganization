@@ -7,6 +7,8 @@ import it.companyorganization.repository.CompanyRepository;
 import it.companyorganization.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -76,5 +78,16 @@ public class CompanyServiceImpl implements CompanyService {
 
         return addresses;
     }
+
+    @Override
+    public Page<Company> findAllCompanyWithPagination(Pageable pageable) {
+        return companyRepository.findAllCompanyWithPagination(pageable);
+    }
+
+    @Override
+    public List<Company> filterCompanyByName(String name) {
+        return companyRepository.filterCompanyByName(name);
+    }
+
 
 }
