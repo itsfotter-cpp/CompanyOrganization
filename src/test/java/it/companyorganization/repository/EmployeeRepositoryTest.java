@@ -53,10 +53,10 @@ public class EmployeeRepositoryTest {
     @DisplayName("It should return all the employees")
     void getAllEmployees() {
         /*
-         * Credo due employee fittizzi che npon vengono salvati nel db ma solo in questo test,
+         * Credo due employee fittizi che non vengono salvati nel db ma solo in questo test,
          * il db già contiene dei valori per cui voglio vedere se aggiungendo
          * questi due employee il valore aspettato sale.
-         * Aggiungo gli employee e poi chiamo il metodo findAll(), dopodichè faccio i test.
+         * Aggiungo gli employee e poi chiamo il metodo findAll(), dopodiché faccio i test.
          */
         employeeRepository.save(employee);
 

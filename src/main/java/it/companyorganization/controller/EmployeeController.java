@@ -2,18 +2,24 @@ package it.companyorganization.controller;
 
 import it.companyorganization.dto.EmployeeDetailsDTO;
 import it.companyorganization.model.Employee;
+import it.companyorganization.model.Image;
 import it.companyorganization.model.RoleEntity;
 import it.companyorganization.service.EmployeeService;
+import org.hibernate.mapping.Any;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /*
  * @RestController is a convenient annotation that combines @Controller and @ResponseBody,
@@ -30,8 +36,11 @@ public class EmployeeController {
 
     //Build Create Employee REST API
     @PostMapping("employee/registration")
-    public ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<?> saveEmployee(@Valid @RequestBody Employee employee, Errors errors) {
         //System.out.println("Employee: " + employee);
+        if(errors.hasErrors()) {
+            return new ResponseEntity<String>(String.valueOf(errors.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<Employee>(employeeService.saveEmployee(employee), HttpStatus.CREATED);
     }
 
@@ -88,6 +97,18 @@ public class EmployeeController {
     public ResponseEntity<Employee> addRoleToUser(@PathVariable String username, @RequestBody RoleEntity roleEntity) {
         Employee employee = employeeService.addRoleToEmployee(username, roleEntity.getName());
         return new ResponseEntity<Employee>(employee, HttpStatus.CREATED);
+    }
+
+    @PostMapping("employee-image/{id}")
+    public ResponseEntity<Employee> addPhotoToEmployee(@RequestBody Image image, @PathVariable("id") long id) {
+        Employee employee = employeeService.addPhotoToEmployee(image, id);
+        return new ResponseEntity<Employee>(employee, HttpStatus.OK);
+    }
+
+    @GetMapping("employee/{id}/photo")
+    public ResponseEntity<Optional<Image>> getPhotoFromEmployee(@PathVariable("id") long id) {
+        Optional<Image> image = employeeService.getPhotoFromEmployee(id);
+        return new ResponseEntity<Optional<Image>>(image, HttpStatus.OK);
     }
 
 }

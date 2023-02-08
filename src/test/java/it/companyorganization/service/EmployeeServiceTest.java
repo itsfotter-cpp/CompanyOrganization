@@ -93,7 +93,7 @@ public class EmployeeServiceTest {
         when(employeeRepository.findById(300L)).thenReturn(Optional.ofNullable(employee));
 
         assertThrows(RuntimeException.class, () -> {
-            employeeService.getEmployeeById(20L);
+            employeeService.getEmployeeById(310L);
         });
     }
 
