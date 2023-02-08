@@ -5,6 +5,7 @@ import it.companyorganization.model.Employee;
 import it.companyorganization.model.Image;
 import it.companyorganization.model.RoleEntity;
 import it.companyorganization.service.EmployeeService;
+import org.hibernate.mapping.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +36,11 @@ public class EmployeeController {
 
     //Build Create Employee REST API
     @PostMapping("employee/registration")
-    public ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<?> saveEmployee(@Valid @RequestBody Employee employee, Errors errors) {
         //System.out.println("Employee: " + employee);
+        if(errors.hasErrors()) {
+            return new ResponseEntity<String>(String.valueOf(errors.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<Employee>(employeeService.saveEmployee(employee), HttpStatus.CREATED);
     }
 
