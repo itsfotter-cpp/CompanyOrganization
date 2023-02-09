@@ -7,6 +7,7 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -47,7 +48,13 @@ public class Employee {
     @JsonIgnore
     @Lob
     private Image photo;
+
+    @ManyToOne
+    @JoinColumn(name = "salary_id")
+    private Salary salary;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<RoleEntity> roles = new ArrayList<>();
 
 }
+

@@ -4,14 +4,8 @@ import it.companyorganization.dto.EmployeeDetailsDTO;
 import it.companyorganization.exception.ResourceConflictException;
 import it.companyorganization.exception.ResourceNotFoundException;
 import it.companyorganization.mappers.EmployeeMapper;
-import it.companyorganization.model.Company;
-import it.companyorganization.model.Employee;
-import it.companyorganization.model.Image;
-import it.companyorganization.model.RoleEntity;
-import it.companyorganization.repository.CompanyRepository;
-import it.companyorganization.repository.EmployeeRepository;
-import it.companyorganization.repository.ImageRepository;
-import it.companyorganization.repository.RoleRepository;
+import it.companyorganization.model.*;
+import it.companyorganization.repository.*;
 import it.companyorganization.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +40,8 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     private CompanyRepository companyRepository;
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private SalaryRepository salaryRepository;
 
     @Autowired
     private EmployeeMapper employeeMapper;
@@ -102,6 +98,9 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
             throw new ResourceNotFoundException("Employee", "Id", employee.getCompany().getId());
         }
 
+        Salary existingSalary = salaryRepository.findById(employee.getSalary().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Salary", "ID", employee.getSalary().getId()));
+
         /*
          * Se il codice fiscale è già esistente allora il salvataggio non deve andare
          * a buon fine.
@@ -114,6 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         employee.setCompany(existingCompany);
+        employee.setSalary(existingSalary);
 
         return employeeRepository.save(employee);
     }
@@ -142,8 +142,16 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
             throw new ResourceNotFoundException("Employee", "Id", id);
         }*/
 
-        return employeeRepository.findById(id).orElseThrow(
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Employee", "Id", id));
+
+        Salary salary = existingEmployee.getSalary();
+        salary.setTotalHour(salary.calculateTotalHour());
+        salary.setTotalReward(salary.calculateTotalReward());
+
+        //existingEmployee.setSalary(salary);
+
+        return existingEmployee;
     }
 
     @Override
