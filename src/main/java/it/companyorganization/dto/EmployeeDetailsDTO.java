@@ -8,4 +8,7 @@ public class EmployeeDetailsDTO {
     private String username;
     private String email;
     private String companyName;
+    private Double hour;
+    private Double reward;
+
 }

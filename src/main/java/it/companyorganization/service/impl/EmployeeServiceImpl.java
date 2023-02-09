@@ -156,7 +156,33 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
     @Override
     public List<EmployeeDetailsDTO> getEmployeeByCompanyId(long companyId) {
-        return employeeMapper.toEmployeeDetailsDTOs(employeeRepository.findByCompanyId(companyId));
+
+        List<Employee> listEmployee = employeeRepository.findByCompanyId(companyId);
+        for(Employee employee : listEmployee) {
+            if(employee.getSalary() != null) {
+                Salary salary = employee.getSalary();
+                salary.setTotalHour(salary.calculateTotalHour());
+                salary.setTotalReward(salary.calculateTotalReward());
+            }
+        }
+
+        return employeeMapper.toEmployeeDetailsDTOs(listEmployee);
+    }
+
+    @Override
+    public EmployeeDetailsDTO getDetailedEmployee(long id) {
+
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee", "ID", id)
+        );
+
+        if(existingEmployee.getSalary() != null) {
+            Salary salary = existingEmployee.getSalary();
+            salary.setTotalHour(salary.calculateTotalHour());
+            salary.setTotalReward(salary.calculateTotalReward());
+        }
+
+        return employeeMapper.toEmployeeDetailsDTO(existingEmployee);
     }
 
     @Override
@@ -229,16 +255,6 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
         employeeRepository.save(existingEmployee);
 
         return existingEmployee;
-    }
-
-    @Override
-    public EmployeeDetailsDTO getDetailedEmployee(long id) {
-
-        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Employee", "ID", id)
-        );
-
-        return employeeMapper.toEmployeeDetailsDTO(existingEmployee);
     }
 
     @Override
