@@ -4,14 +4,8 @@ import it.companyorganization.dto.EmployeeDetailsDTO;
 import it.companyorganization.exception.ResourceConflictException;
 import it.companyorganization.exception.ResourceNotFoundException;
 import it.companyorganization.mappers.EmployeeMapper;
-import it.companyorganization.model.Company;
-import it.companyorganization.model.Employee;
-import it.companyorganization.model.Image;
-import it.companyorganization.model.RoleEntity;
-import it.companyorganization.repository.CompanyRepository;
-import it.companyorganization.repository.EmployeeRepository;
-import it.companyorganization.repository.ImageRepository;
-import it.companyorganization.repository.RoleRepository;
+import it.companyorganization.model.*;
+import it.companyorganization.repository.*;
 import it.companyorganization.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +19,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -46,6 +36,8 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     private CompanyRepository companyRepository;
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private SalaryRepository salaryRepository;
 
     @Autowired
     private EmployeeMapper employeeMapper;
@@ -102,6 +94,9 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
             throw new ResourceNotFoundException("Employee", "Id", employee.getCompany().getId());
         }
 
+        Salary existingSalary = salaryRepository.findById(employee.getSalary().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Salary", "ID", employee.getSalary().getId()));
+
         /*
          * Se il codice fiscale è già esistente allora il salvataggio non deve andare
          * a buon fine.
@@ -114,9 +109,16 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         employee.setCompany(existingCompany);
+        employee.setSalary(existingSalary);
 
         return employeeRepository.save(employee);
     }
+
+    /*
+     * Salvare più di un Employee, in modo che mentre sta salvando stoppo il client
+     * MySQL per vedere il tipo di eccezione e provare la proprietà
+     * rollBackFor sull'annotation @Transactional.
+     */
 
     @Override
     public Employee addRoleToEmployee(String username, String roleName) {
@@ -142,13 +144,47 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
             throw new ResourceNotFoundException("Employee", "Id", id);
         }*/
 
-        return employeeRepository.findById(id).orElseThrow(
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Employee", "Id", id));
+
+        Salary salary = existingEmployee.getSalary();
+        salary.setTotalHour(salary.calculateTotalHour());
+        salary.setTotalReward(salary.calculateTotalReward());
+
+        //existingEmployee.setSalary(salary);
+
+        return existingEmployee;
     }
 
     @Override
     public List<EmployeeDetailsDTO> getEmployeeByCompanyId(long companyId) {
-        return employeeMapper.toEmployeeDetailsDTOs(employeeRepository.findByCompanyId(companyId));
+
+        List<Employee> listEmployee = employeeRepository.findByCompanyId(companyId);
+        for(Employee employee : listEmployee) {
+            if(employee.getSalary() != null) {
+                Salary salary = employee.getSalary();
+                salary.setTotalHour(salary.calculateTotalHour());
+                salary.setTotalReward(salary.calculateTotalReward());
+            }
+        }
+
+        return employeeMapper.toEmployeeDetailsDTOs(listEmployee);
+    }
+
+    @Override
+    public EmployeeDetailsDTO getDetailedEmployee(long id) {
+
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee", "ID", id)
+        );
+
+        if(existingEmployee.getSalary() != null) {
+            Salary salary = existingEmployee.getSalary();
+            salary.setTotalHour(salary.calculateTotalHour());
+            salary.setTotalReward(salary.calculateTotalReward());
+        }
+
+        return employeeMapper.toEmployeeDetailsDTO(existingEmployee);
     }
 
     @Override
@@ -187,6 +223,17 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
     }
 
     @Override
+    public Optional<List<Employee>> getEmployeeFromDataRange(Date dataRange) {
+        Optional<List<Employee>> employeeList = employeeRepository.findEmployeeFromDataRange(dataRange);
+        for(Employee e : employeeList.get()) {
+            Salary salary = e.getSalary();
+            salary.setTotalHour(salary.calculateTotalHour());
+            salary.setTotalReward(salary.calculateTotalReward());
+        }
+        return employeeRepository.findEmployeeFromDataRange(dataRange);
+    }
+
+    @Override
     public Employee updateEmployee(Employee employee, long id) {
 
         //Check if the employee with ID 'id' exist in the db or not.
@@ -221,16 +268,6 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
         employeeRepository.save(existingEmployee);
 
         return existingEmployee;
-    }
-
-    @Override
-    public EmployeeDetailsDTO getDetailedEmployee(long id) {
-
-        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Employee", "ID", id)
-        );
-
-        return employeeMapper.toEmployeeDetailsDTO(existingEmployee);
     }
 
     @Override

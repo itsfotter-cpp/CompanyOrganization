@@ -5,12 +5,13 @@ import it.companyorganization.model.Employee;
 import it.companyorganization.model.Image;
 import it.companyorganization.model.RoleEntity;
 import it.companyorganization.service.EmployeeService;
-import org.hibernate.mapping.Any;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +31,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/")
+@Slf4j
 public class EmployeeController {
 
     @Autowired
@@ -109,6 +112,13 @@ public class EmployeeController {
     public ResponseEntity<Optional<Image>> getPhotoFromEmployee(@PathVariable("id") long id) {
         Optional<Image> image = employeeService.getPhotoFromEmployee(id);
         return new ResponseEntity<Optional<Image>>(image, HttpStatus.OK);
+    }
+
+    @GetMapping("employee/data")
+    public ResponseEntity<List<Employee>> getEmployeeFromDataRange(
+            @RequestParam("data_range")
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataRange) {
+        return new ResponseEntity<List<Employee>>(employeeService.getEmployeeFromDataRange(dataRange).get(), HttpStatus.OK);
     }
 
 }

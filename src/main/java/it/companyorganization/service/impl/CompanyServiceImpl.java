@@ -13,9 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 @Slf4j
 public class CompanyServiceImpl implements CompanyService {
 
