@@ -19,14 +19,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -117,6 +113,12 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
         return employeeRepository.save(employee);
     }
+
+    /*
+     * Salvare più di un Employee, in modo che mentre sta salvando stoppo il client
+     * MySQL per vedere il tipo di eccezione e provare la proprietà
+     * rollBackFor sull'annotation @Transactional.
+     */
 
     @Override
     public Employee addRoleToEmployee(String username, String roleName) {
@@ -218,6 +220,17 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
         }
 
         return image;
+    }
+
+    @Override
+    public Optional<List<Employee>> getEmployeeFromDataRange(Date dataRange) {
+        Optional<List<Employee>> employeeList = employeeRepository.findEmployeeFromDataRange(dataRange);
+        for(Employee e : employeeList.get()) {
+            Salary salary = e.getSalary();
+            salary.setTotalHour(salary.calculateTotalHour());
+            salary.setTotalReward(salary.calculateTotalReward());
+        }
+        return employeeRepository.findEmployeeFromDataRange(dataRange);
     }
 
     @Override

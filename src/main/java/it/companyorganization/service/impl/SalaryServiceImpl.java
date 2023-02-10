@@ -1,6 +1,5 @@
 package it.companyorganization.service.impl;
 
-import it.companyorganization.model.Employee;
 import it.companyorganization.model.Salary;
 import it.companyorganization.repository.EmployeeRepository;
 import it.companyorganization.repository.SalaryRepository;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,6 +25,7 @@ public class SalaryServiceImpl implements SalaryService {
     @Transactional
     @Override
     public Salary saveSalary(@Valid Salary salary) {
+        salary.setDataInsert(new Date());
         salary.setTotalHour(salary.calculateTotalHour());
         salary.setTotalReward(salary.calculateTotalReward());
         return salaryRepository.save(salary);
