@@ -54,9 +54,9 @@ public class CompanyController {
         return companyService.findAllCompanyWithPagination(pageable);
     }
 
-    @GetMapping(value = "/company-filter-name/{chrc}")
-    public ResponseEntity<List<Company>> filterCompanyByName(@PathVariable("chrc") String chrc) {
-        return new ResponseEntity<List<Company>>(companyService.filterCompanyByName(chrc), HttpStatus.OK);
+    @GetMapping(value = "/company-filter-name")
+    public ResponseEntity<List<Company>> filterCompanyByName(@RequestParam("company_char") String company_char) {
+        return new ResponseEntity<List<Company>>(companyService.filterCompanyByName(company_char), HttpStatus.OK);
     }
 
 }
