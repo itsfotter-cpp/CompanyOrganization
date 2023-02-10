@@ -1,15 +1,12 @@
 package it.companyorganization.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import it.companyorganization.model.Address;
 import it.companyorganization.model.Company;
-import it.companyorganization.model.Employee;
 import it.companyorganization.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

@@ -12,6 +12,8 @@ public interface EmployeeMapper {
 
     @Mapping(target = "employeeId", source = "id")
     @Mapping(target = "companyName", source = "company.companyName")
+    @Mapping(target = "hour", source = "salary.totalHour")
+    @Mapping(target = "reward", source = "salary.totalReward")
     EmployeeDetailsDTO toEmployeeDetailsDTO(Employee employee);
 
     List<EmployeeDetailsDTO> toEmployeeDetailsDTOs(List<Employee> employees);
