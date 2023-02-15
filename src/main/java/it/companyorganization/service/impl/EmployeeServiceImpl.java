@@ -94,9 +94,12 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
             throw new ResourceNotFoundException("Employee", "Id", employee.getCompany().getId());
         }
 
-        Salary existingSalary = salaryRepository.findById(employee.getSalary().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Salary", "ID", employee.getSalary().getId()));
+        Salary existingSalary = null;
 
+        if(employee.getSalary() != null) {
+            existingSalary = salaryRepository.findById(employee.getSalary().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Salary", "ID", employee.getSalary().getId()));
+        }
         /*
          * Se il codice fiscale è già esistente allora il salvataggio non deve andare
          * a buon fine.
@@ -147,9 +150,11 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
         Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Employee", "Id", id));
 
-        Salary salary = existingEmployee.getSalary();
-        salary.setTotalHour(salary.calculateTotalHour());
-        salary.setTotalReward(salary.calculateTotalReward());
+        if(existingEmployee.getSalary() != null) {
+            Salary salary = existingEmployee.getSalary();
+            salary.setTotalHour(salary.calculateTotalHour());
+            salary.setTotalReward(salary.calculateTotalReward());
+        }
 
         //existingEmployee.setSalary(salary);
 

@@ -1,5 +1,6 @@
 package it.companyorganization.repository;
 
+import it.companyorganization.model.Company;
 import it.companyorganization.model.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -120,7 +121,7 @@ public class EmployeeRepositoryTest {
     void getEmployeesByCompanyId() {
         employeeRepository.save(employee);
 
-        List<Employee> list = employeeRepository.findByCompanyId(4);
+        List<Employee> list = employeeRepository.findByCompanyId(4L);
 
         assertNotNull(list);
         assertThat(list.size()).isEqualTo(5);

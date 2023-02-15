@@ -5,6 +5,7 @@ import it.companyorganization.model.Company;
 import it.companyorganization.service.CompanyService;
 import it.companyorganization.service.EmployeeService;
 import it.companyorganization.service.ImageService;
+import it.companyorganization.service.SalaryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class CompanyControllerTest {
     private EmployeeService employeeService;
     @MockBean
     private ImageService imageService;
+    @MockBean
+    private SalaryService salaryService;
     @Autowired
     ObjectMapper objectMapper;
 
