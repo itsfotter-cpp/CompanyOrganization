@@ -116,8 +116,7 @@ public class EmployeeController {
 
     @GetMapping("employee/data")
     public ResponseEntity<List<Employee>> getEmployeeFromDataRange(
-            @RequestParam("data_range")
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataRange) {
+            @RequestParam("data_range") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataRange) {
         return new ResponseEntity<List<Employee>>(employeeService.getEmployeeFromDataRange(dataRange).get(), HttpStatus.OK);
     }
 

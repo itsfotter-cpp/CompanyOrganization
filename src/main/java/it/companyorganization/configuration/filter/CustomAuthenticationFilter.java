@@ -48,10 +48,19 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         String username = null;
         String password = null;
         try {
+            /*
+             * This configuration is used for passing username and password in JSON format by Postman
+
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> map = objectMapper.readValue(request.getInputStream(), Map.class);
             username = map.get("username");
             password = map.get("password");
+
+             */
+
+            username = request.getParameter("username");
+            password = request.getParameter("password");
+
             log.debug("Login with username: {}", username);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         }

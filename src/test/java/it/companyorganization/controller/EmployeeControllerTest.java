@@ -32,19 +32,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(controllers = EmployeeController.class)
 public class EmployeeControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private EmployeeService employeeService;
+    /*
     @MockBean
     private CompanyService companyService;
     @MockBean
     private ImageService imageService;
     @MockBean
     private SalaryService salaryService;
+     */
     @Autowired
     private ObjectMapper objectMapper;
     private Employee employee;

@@ -85,22 +85,6 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
         log.info("Saving employee {} to the database", employee.getUsername());
 
         /*
-         * In questo modo funziona sia se inserisco solo l'ID, si ase inserisco solo il CompanyName.
-         */
-        Company existingCompany = companyRepository.findById(employee.getCompany().getId())
-                .orElse(companyRepository.findByCompanyName(employee.getCompany().getCompanyName()));
-
-        if(existingCompany == null) {
-            throw new ResourceNotFoundException("Employee", "Id", employee.getCompany().getId());
-        }
-
-        Salary existingSalary = null;
-
-        if(employee.getSalary() != null) {
-            existingSalary = salaryRepository.findById(employee.getSalary().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Salary", "ID", employee.getSalary().getId()));
-        }
-        /*
          * Se il codice fiscale è già esistente allora il salvataggio non deve andare
          * a buon fine.
          */
@@ -108,6 +92,23 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
 
         if(existingEmployee.isPresent()) {
             throw new ResourceConflictException("Employee", "Fiscal Code");
+        }
+
+        /*
+         * In questo modo funziona sia se inserisco solo l'ID, sia se inserisco solo il CompanyName.
+         */
+        Company existingCompany = companyRepository.findById(employee.getCompany().getId())
+                .orElse(companyRepository.findByCompanyName(employee.getCompany().getCompanyName()));
+
+        if(existingCompany == null) {
+            throw new ResourceNotFoundException("Company", "Id", employee.getCompany().getId());
+        }
+
+        Salary existingSalary = null;
+
+        if(employee.getSalary() != null) {
+            existingSalary = salaryRepository.findById(employee.getSalary().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Salary", "ID", employee.getSalary().getId()));
         }
 
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));

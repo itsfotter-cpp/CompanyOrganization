@@ -35,7 +35,7 @@ public class EmployeeRepositoryTest {
         employee.setLastName("D'Onofrio");
         employee.setEmail("ldonof@gmail.com");
         employee.setUsername("ldonofrio");
-        employee.setCf("55910-301");
+        employee.setCf("11527-062");
         employee.setPassword("hello1");
         employee.setCompany(companyRepository.findById(4L).get());
     }
@@ -75,7 +75,7 @@ public class EmployeeRepositoryTest {
         assertNotNull(list);
         assertThat(list).isNotNull();
 
-        assertEquals(200, list.size());
+        assertEquals(201, list.size());
 
     }
 
@@ -113,7 +113,7 @@ public class EmployeeRepositoryTest {
 
         List<Employee> list = employeeRepository.findAll();
 
-        assertEquals(198, list.size());
+        assertEquals(199, list.size());
         assertThat(existingEmployee).isEmpty();
     }
 
