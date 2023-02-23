@@ -1,5 +1,8 @@
 package it.companyorganization.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.companyorganization.dto.EmployeeDetailsDTO;
 import it.companyorganization.model.Employee;
 import it.companyorganization.model.Image;
@@ -38,6 +41,13 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     //Build Create Employee REST API
+    @Operation(summary = "Save an Employee")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Employee saved"),
+            @ApiResponse(responseCode = "409", description = "Employee fiscal code already saved"),
+            @ApiResponse(responseCode = "404", description = "Company or Salary not found")
+    })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("employee/registration")
     public ResponseEntity<?> saveEmployee(@Valid @RequestBody Employee employee, Errors errors) {
         //System.out.println("Employee: " + employee);
@@ -97,6 +107,7 @@ public class EmployeeController {
     }
 
     @PostMapping("employee/{username}/addRoleToUser")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Employee> addRoleToUser(@PathVariable String username, @RequestBody RoleEntity roleEntity) {
         Employee employee = employeeService.addRoleToEmployee(username, roleEntity.getName());
         return new ResponseEntity<Employee>(employee, HttpStatus.CREATED);
