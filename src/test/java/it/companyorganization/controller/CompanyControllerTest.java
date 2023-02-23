@@ -5,6 +5,7 @@ import it.companyorganization.model.Company;
 import it.companyorganization.service.CompanyService;
 import it.companyorganization.service.EmployeeService;
 import it.companyorganization.service.ImageService;
+import it.companyorganization.service.SalaryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +23,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(controllers = CompanyController.class)
 public class CompanyControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private CompanyService companyService;
+    /*
     @MockBean
     private EmployeeService employeeService;
+
     @MockBean
     private ImageService imageService;
+    @MockBean
+    private SalaryService salaryService;
+    */
     @Autowired
     ObjectMapper objectMapper;
 

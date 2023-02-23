@@ -1,5 +1,6 @@
 package it.companyorganization.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +31,7 @@ public class Image {
 
 	@Column(name = "image", unique = false, nullable = false, length = 100000)
 	private byte[] image;
+
+	@OneToOne(mappedBy = "photo")
+	private Employee employee;
 }

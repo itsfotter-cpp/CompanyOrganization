@@ -4,15 +4,17 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -32,14 +34,25 @@ public class Employee {
     @Column(nullable = false)
     private String password;
     private String cf;
+    @NotBlank
+    @Email(message = "Inserire un pattern email valido!")
     private String email;
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "photo", referencedColumnName = "id")
+    @JsonIgnore
     @Lob
-    @Column(name = "photo")
-    private byte[] photo;
+    private Image photo;
+
+    @ManyToOne
+    @JoinColumn(name = "salary_id")
+    private Salary salary;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<RoleEntity> roles = new ArrayList<>();
 
 }
+

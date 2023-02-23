@@ -1,5 +1,6 @@
 package it.companyorganization.repository;
 
+import it.companyorganization.model.Company;
 import it.companyorganization.model.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,7 @@ public class EmployeeRepositoryTest {
         employee.setLastName("D'Onofrio");
         employee.setEmail("ldonof@gmail.com");
         employee.setUsername("ldonofrio");
-        employee.setCf("55910-301");
+        employee.setCf("11527-062");
         employee.setPassword("hello1");
         employee.setCompany(companyRepository.findById(4L).get());
     }
@@ -53,10 +54,10 @@ public class EmployeeRepositoryTest {
     @DisplayName("It should return all the employees")
     void getAllEmployees() {
         /*
-         * Credo due employee fittizzi che npon vengono salvati nel db ma solo in questo test,
+         * Credo due employee fittizi che non vengono salvati nel db ma solo in questo test,
          * il db già contiene dei valori per cui voglio vedere se aggiungendo
          * questi due employee il valore aspettato sale.
-         * Aggiungo gli employee e poi chiamo il metodo findAll(), dopodichè faccio i test.
+         * Aggiungo gli employee e poi chiamo il metodo findAll(), dopodiché faccio i test.
          */
         employeeRepository.save(employee);
 
@@ -74,7 +75,7 @@ public class EmployeeRepositoryTest {
         assertNotNull(list);
         assertThat(list).isNotNull();
 
-        assertEquals(200, list.size());
+        assertEquals(201, list.size());
 
     }
 
@@ -112,7 +113,7 @@ public class EmployeeRepositoryTest {
 
         List<Employee> list = employeeRepository.findAll();
 
-        assertEquals(198, list.size());
+        assertEquals(199, list.size());
         assertThat(existingEmployee).isEmpty();
     }
 
@@ -120,7 +121,7 @@ public class EmployeeRepositoryTest {
     void getEmployeesByCompanyId() {
         employeeRepository.save(employee);
 
-        List<Employee> list = employeeRepository.findByCompanyId(4);
+        List<Employee> list = employeeRepository.findByCompanyId(4L);
 
         assertNotNull(list);
         assertThat(list.size()).isEqualTo(5);
