@@ -50,7 +50,7 @@ public class EmployeeServiceTest {
         employee.setLastName("D'Onofrio");
         employee.setEmail("ldonof@gmail.com");
         employee.setUsername("ldonofrio");
-        employee.setCf("55910-301");
+        employee.setCf("11527-062");
         employee.setPassword(passwordEncoder.encode("hello1"));
     }
 
@@ -93,7 +93,7 @@ public class EmployeeServiceTest {
         when(employeeRepository.findById(300L)).thenReturn(Optional.ofNullable(employee));
 
         assertThrows(RuntimeException.class, () -> {
-            employeeService.getEmployeeById(20L);
+            employeeService.getEmployeeById(310L);
         });
     }
 
@@ -114,7 +114,7 @@ public class EmployeeServiceTest {
         /*
          * Controllo per vedere che effettivamente il codice fiscale non è stato aggiornato
          */
-        assertEquals("55910-301", newEmployee.getCf());
+        assertEquals("11527-062", newEmployee.getCf());
     }
 
     @Test
