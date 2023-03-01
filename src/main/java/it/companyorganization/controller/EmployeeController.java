@@ -17,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +43,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     //Build Create Employee REST API
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Save an Employee")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Employee saved"),
