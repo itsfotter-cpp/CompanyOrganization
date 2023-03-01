@@ -86,7 +86,7 @@ public class EmployeeRepositoryTest {
 
         assertNotNull(employeeFounded);
         assertEquals("ldonofrio", employee.getUsername());
-        assertEquals("55910-301", employee.getCf());
+        assertEquals("11527-062", employee.getCf());
     }
 
     @Test
