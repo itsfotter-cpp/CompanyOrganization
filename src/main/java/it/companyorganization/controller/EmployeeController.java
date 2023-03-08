@@ -133,4 +133,11 @@ public class EmployeeController {
         return new ResponseEntity<List<Employee>>(employeeService.getEmployeeFromDataRange(dataRange).get(), HttpStatus.OK);
     }
 
+    @GetMapping("employee/relation/{id}")
+    public ResponseEntity<List<Employee>> getRelationEmployeeCompany(@PathVariable("id") long id) {
+        List<Employee> listEmployee = employeeService.getRelationEmployeeCompany(id);
+
+        return new ResponseEntity<List<Employee>>(listEmployee, HttpStatus.OK);
+    }
+
 }

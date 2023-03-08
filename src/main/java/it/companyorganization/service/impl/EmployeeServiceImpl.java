@@ -286,6 +286,15 @@ public class EmployeeServiceImpl implements EmployeeService, UserDetailsService 
         employeeRepository.deleteById(id);
     }
 
+    @Override
+    public List<Employee> getRelationEmployeeCompany(long id) {
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee", "ID", id)
+        );
+
+        return employee.getCompany().getEmployees();
+    }
+
     private static final String USER_NOT_FOUND_MESSAGE = "User with username %s not found!";
     @Autowired
     private RoleRepository roleRepository;

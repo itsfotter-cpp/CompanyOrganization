@@ -23,5 +23,6 @@ public interface EmployeeService {
     Optional<Image> getPhotoFromEmployee(long id);
     Optional<List<Employee>> getEmployeeFromDataRange(Date dataRange);
     void deleteEmployee(long id);
+    List<Employee> getRelationEmployeeCompany(long id);
 
 }
